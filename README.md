@@ -2,7 +2,7 @@
 a wechat js widget for yii1.x
 
 #保存微信图片到本地服务器
-<code>
+```php
 public function saveWeixinFile($media_id) {
 	if ($media_id) {
 	    $filecontent = $this->wechatModel->getMedia($media_id);
@@ -23,4 +23,4 @@ public function saveWeixinFile($media_id) {
 	}
 	return false;
 }
-</code>
+```
