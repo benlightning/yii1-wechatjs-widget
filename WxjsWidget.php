@@ -10,7 +10,9 @@ Yii::import('application.extensions.wxjs.jssdk');
 class WxjsWidget extends CWidget{
     public $appid;
     public $appsecret;
-    public $options;
+    public $options = false;//分享参数
+    public $preView = false;//展示图片参数
+    public $uploadImg = false;//上传图片
     public $wxJsSign;
     public function run(){
         $jssdk = new jssdk($this->appid, $this->appsecret);

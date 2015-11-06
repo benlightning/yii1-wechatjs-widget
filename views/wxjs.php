@@ -46,7 +46,7 @@
 </script>
 <script>
     wx.ready(function () {
-<?php if (isset($this->options['title'])): ?>
+<?php if ($this->options): ?>
             var shareData = {
                 title: '<?php echo $this->options['title']; ?>',
                 desc: '<?php echo $this->options['desc']; ?>',
@@ -79,51 +79,75 @@
             localId: [],
             serverId: []
         };
-
-        // 5.3 上传图片
-        document.querySelector('#uploadImage').onclick = function () {
-            var i = 0, length = 0;
-            images.serverId = [];
-            function upload() {
-                wx.uploadImage({
-                    localId: images.localId[i],
-                    success: function (res) {
-                        // 直接保存到本地服务器
-                        //var uploadUrl = '<?php echo Yii::app()->createAbsoluteUrl($this->options['uploadImgRoute']); ?>';
-                        //$.getJSON(uploadUrl, {media_id: res.serverId}, function (myret) {
+<?php if ($this->uploadImg): ?>
+            // 5.3 上传图片
+            document.querySelector('#uploadImage').onclick = function () {
+                var i = 0, length = 0;
+                images.serverId = [];
+                function upload() {
+                    wx.uploadImage({
+                        localId: images.localId[i],
+                        success: function (res) {
+                            // 直接保存到本地服务器
+                            //var uploadUrl = '<?php echo Yii::app()->createAbsoluteUrl($this->options['uploadImgRoute']); ?>';
+                            //$.getJSON(uploadUrl, {media_id: res.serverId}, function (myret) {
                             //alert(myret.error);
                             //$('#uploadImgUrl').val(myret.url);
-                        //});
-                        $('#uploadImgUrl').val(res.serverId);
-                        i++;
-                        // alert('已上传：' + i + '/' + length);
-                        images.serverId.push(res.serverId);
-                        if (i < length) {
-                            upload();
+                            //});
+                            $('#uploadImgUrl').val(res.serverId);
+                            i++;
+                            // alert('已上传：' + i + '/' + length);
+                            images.serverId.push(res.serverId);
+                            if (i < length) {
+                                upload();
+                            }
+                        },
+                        fail: function (res) {
+                            alert(JSON.stringify(res));
                         }
-                    },
-                    fail: function (res) {
-                        alert(JSON.stringify(res));
+                    });
+                }
+                wx.chooseImage({
+                    success: function (res) {
+                        images.localId = res.localIds;
+                        length = images.localId.length;
+                        $('#uploadImage').attr('src', res.localIds[0]);
+                        if (images.localId.length != 1) {
+                            alert('请选择一张照片！');
+                            return;
+                        }
+                        upload();
+                        //alert('已选择 ' + res.localIds.length + ' 张图片');
                     }
                 });
-            }
-            wx.chooseImage({
+            };
+<?php endif; ?>
+<?php if ($this->preView): ?>
+            $(document).on('click', '<?php echo $this->preView['class']; ?>', function () {
+                wx.previewImage({
+                    current: $(this).attr('data-value'),
+                    urls: [<?php echo $this->preView['imgurls']; ?>]
+                });
+            });
+            // 5.2 图片预览
+<?php endif; ?>
+        // 6 设备信息接口
+        // 6.1 获取当前网络状态
+        document.querySelector('#getNetworkType').onclick = function () {
+            wx.getNetworkType({
                 success: function (res) {
-                    images.localId = res.localIds;
-                    length = images.localId.length;
-                    $('#uploadImage').attr('src',res.localIds[0]);
-                    if (images.localId.length != 1) {
-                        alert('请选择一张照片！');
-                        return;
-                    }
-                    upload();
-                    //alert('已选择 ' + res.localIds.length + ' 张图片');
+                    alert(res.networkType);
+                },
+                fail: function (res) {
+                    alert(JSON.stringify(res));
                 }
             });
         };
+
     });
     wx.error(function (res) {
 //  alert(res.errMsg);
     });
+
 </script>
 
