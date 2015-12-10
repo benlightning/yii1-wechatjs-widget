@@ -13,6 +13,8 @@ class WxjsWidget extends CWidget{
     public $options = false;//分享参数
     public $preView = false;//展示图片参数
     public $uploadImg = false;//上传图片
+    public $location = false;//直接获取地理位置
+    public $getLocation = false;//点击获取地理位置
     public $wxJsSign;
     public function run(){
         $jssdk = new jssdk($this->appid, $this->appsecret);
